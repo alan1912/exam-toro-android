@@ -1,4 +1,4 @@
-package com.example.toro.android
+package com.example.toro.android.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
