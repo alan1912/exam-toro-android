@@ -4,4 +4,8 @@
     <string name="menu_list_title">List</string>
     <string name="menu_add_title">Add</string>
     <string name="menu_edit_title">Edit</string>
+
+    <string name="add_textview_name_title">Name</string>
+    <string name="add_textview_age_title">Age</string>
+    <string name="add_textview_gender_title">Gender</string>
 </resources>

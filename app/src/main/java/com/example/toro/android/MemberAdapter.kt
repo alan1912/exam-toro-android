@@ -45,6 +45,11 @@ class MemberAdapter(private val members: ArrayList<Member>, var listener: OnAdap
 
     override fun getItemCount(): Int = members.size
 
+    fun setData(newList: List<Member>) {
+        members.clear()
+        members.addAll(newList)
+    }
+
     private fun getSex(sex: Int) : String {
         when (sex) {
             Sex.SEX_MALE -> {

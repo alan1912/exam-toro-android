@@ -8,11 +8,18 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.toro.android.add.AddActivity
 import com.example.toro.android.room.Member
+import com.example.toro.android.room.MemberDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
+    private val db by lazy { Room.databaseBuilder(this, MemberDatabase::class.java, "member.db").build() }
     lateinit var memberAdapter: MemberAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +28,20 @@ class MainActivity : AppCompatActivity() {
 
         setupView()
         setupList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
+
+    private fun loadData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            memberAdapter.setData(db.memberDao().all())
+            withContext(Dispatchers.Main) {
+                memberAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,12 +68,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupList() {
+//        arrayListOf(
+//            Member("Wayne", 20, 1),
+//            Member("David", 20, 0),
+//            Member("Alan", 20, 1),
+//        )
         memberAdapter = MemberAdapter(
-            arrayListOf(
-                Member("Wayne", 20, 1),
-                Member("David", 20, 0),
-                Member("Alan", 20, 1),
-            ),
+            arrayListOf(),
             object: MemberAdapter.OnAdapterListener {
                 override fun onClick(member: Member) {
                 }
@@ -80,7 +102,11 @@ class MainActivity : AppCompatActivity() {
                 dialogInterface.dismiss()
             }
             setPositiveButton("確定") { dialogInterface, i ->
-                System.out.println("刪除 ${member.name} 成功")
+                CoroutineScope(Dispatchers.IO).launch {
+                    db.memberDao().delete(member)
+                    dialogInterface.dismiss()
+                    loadData()
+                }
             }
         }
 
