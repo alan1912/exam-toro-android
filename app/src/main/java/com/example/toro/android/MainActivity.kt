@@ -5,14 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.toro.android.add.AddActivity
+import com.example.toro.android.room.Member
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var memberAdapter: MemberAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        getSupportActionBar()?.setTitle(R.string.menu_list_title)
+        setupView()
+        setupList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -21,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         when(item.itemId) {
             R.id.action_add -> {
                 System.out.println("click add")
@@ -31,5 +40,50 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupView() {
+        getSupportActionBar()?.setTitle(R.string.menu_list_title)
+    }
+
+    private fun setupList() {
+        memberAdapter = MemberAdapter(
+            arrayListOf(
+                Member("Wayne", 20, 1),
+                Member("David", 20, 0),
+                Member("Alan", 20, 1),
+            ),
+            object: MemberAdapter.OnAdapterListener {
+                override fun onClick(member: Member) {
+                }
+                override fun onUpdate(member: Member) {
+                }
+                override fun onDelete(member: Member) {
+                    deleteAlert(member)
+                }
+            }
+        )
+
+        val list: RecyclerView = findViewById(R.id.member_list)
+        list.apply {
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = memberAdapter
+        }
+    }
+
+    private fun deleteAlert(member: Member){
+        val dialog = AlertDialog.Builder(this)
+        dialog.apply {
+            setTitle("刪除")
+            setMessage("確定刪除 ${member.name}?")
+            setNegativeButton("取消") { dialogInterface, i ->
+                dialogInterface.dismiss()
+            }
+            setPositiveButton("確定") { dialogInterface, i ->
+                System.out.println("刪除 ${member.name} 成功")
+            }
+        }
+
+        dialog.show()
     }
 }
