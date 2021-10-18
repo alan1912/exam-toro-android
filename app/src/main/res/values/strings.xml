@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">exam-toro-android</string>
+    <string name="menu_add_btn">Add</string>
+    <string name="menu_list_title">List</string>
+    <string name="menu_add_title">Add</string>
+    <string name="menu_edit_title">Edit</string>
 </resources>
