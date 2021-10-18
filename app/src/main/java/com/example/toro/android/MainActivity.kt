@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.example.toro.android.add.AddActivity
 import com.example.toro.android.room.Member
 import com.example.toro.android.room.MemberDatabase
@@ -18,8 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-
-    private val db by lazy { Room.databaseBuilder(this, MemberDatabase::class.java, "member.db").build() }
+    private val db by lazy { MemberDatabase(this) }
     lateinit var memberAdapter: MemberAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +51,6 @@ class MainActivity : AppCompatActivity() {
 
         when(item.itemId) {
             R.id.action_add -> {
-                System.out.println("click add")
-
                 val add = Intent(this, AddActivity::class.java)
                 startActivity(add)
             }
