@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.room.Room
-import java.lang.reflect.Executable
-import java.util.concurrent.Executors
+import com.example.toro.android.add.AddActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +25,8 @@ class MainActivity : AppCompatActivity() {
             R.id.action_add -> {
                 System.out.println("click add")
 
-//                val add = Intent(this, AddActivity::class.java)
-//                startActivity(add)
+                val add = Intent(this, AddActivity::class.java)
+                startActivity(add)
             }
         }
 
