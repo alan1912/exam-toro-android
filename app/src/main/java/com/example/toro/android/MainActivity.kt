@@ -64,16 +64,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView() {
-//        arrayListOf(
-//            Member("Wayne", 20, 1),
-//            Member("David", 20, 0),
-//            Member("Alan", 20, 1),
-//        )
         memberAdapter = MemberAdapter(
             arrayListOf(),
             object: MemberAdapter.OnAdapterListener {
                 override fun onUpdate(member: Member) {
-                    println("on updated")
+                    update(member)
                 }
                 override fun onDelete(member: Member) {
                     deleteAlert(member)
@@ -89,23 +84,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun update(member: Member) {
+        println(member.id)
+        startActivity(
+            Intent(this, AddActivity::class.java)
+                .putExtra("member_id", member.id)
+        )
+    }
+
     private fun deleteAlert(member: Member){
-        val dialog = AlertDialog.Builder(this)
-        dialog.apply {
-            setTitle(R.string.btn_delete)
-            setMessage("${getString(R.string.btn_delete)} ${member.name}?")
-            setNegativeButton(R.string.btn_cancel) { dialogInterface, _ ->
+        AlertDialog.Builder(this)
+            .setTitle(R.string.btn_delete)
+            .setMessage("${getString(R.string.btn_delete)} ${member.name}?")
+            .setNegativeButton(R.string.btn_cancel) { dialogInterface, _ ->
                 dialogInterface.dismiss()
             }
-            setPositiveButton(R.string.btn_ok) { dialogInterface, _ ->
+            .setPositiveButton(R.string.btn_ok) { dialogInterface, _ ->
                 CoroutineScope(Dispatchers.IO).launch {
                     db.memberDao().delete(member)
                     dialogInterface.dismiss()
                     loadData()
                 }
             }
-        }
-
-        dialog.show()
+            .show()
     }
 }

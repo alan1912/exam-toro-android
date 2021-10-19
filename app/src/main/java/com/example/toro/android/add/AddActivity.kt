@@ -1,5 +1,6 @@
 package com.example.toro.android.add
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,6 +15,9 @@ import kotlinx.coroutines.launch
 class AddActivity : AppCompatActivity() {
     private val db by lazy { MemberDatabase(this) }
     private var gender: Int = 0
+    private lateinit var nameTextView: TextView
+    private lateinit var ageTextView: TextView
+    private lateinit var genderSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +32,17 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        supportActionBar?.setTitle(R.string.menu_add_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val spinner: Spinner = findViewById(R.id.addMemberGender)
+        val memberId = intent.getIntExtra("member_id", 0)
+
+        nameTextView = findViewById(R.id.addMemberName)
+        ageTextView = findViewById(R.id.addMemberAge)
+        genderSpinner = findViewById(R.id.addMemberGender)
+
         val adapter = ArrayAdapter.createFromResource(this, R.array.genders, android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        genderSpinner.adapter = adapter
+        genderSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -47,20 +55,64 @@ class AddActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        val addBtn: Button = findViewById(R.id.add_btn)
-        addBtn.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                val name: TextView = findViewById(R.id.addMemberName)
-                val age: TextView = findViewById(R.id.addMemberAge)
-                db.memberDao().create(
-                    Member(
-                        name.text.toString(),
-                        if (age.text.toString() != "") age.text.toString().toInt() else 0,
-                        gender
-                    )
-                )
-                finish()
+        val sendBtn: Button = findViewById(R.id.send_btn)
+        sendBtn.setOnClickListener {
+            when {
+                nameTextView.text.isBlank() -> {
+                    AlertDialog.Builder(this@AddActivity)
+                        .setTitle(R.string.error_title)
+                        .setMessage(R.string.error_name_empty)
+                        .setPositiveButton(R.string.btn_close, null)
+                        .show()
+                }
+                ageTextView.text.isBlank() -> {
+                    AlertDialog.Builder(this@AddActivity)
+                        .setTitle(R.string.error_title)
+                        .setMessage(R.string.error_age_empty)
+                        .setPositiveButton(R.string.btn_close, null)
+                        .show()
+                }
+                else -> {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (memberId == 0) {
+                            db.memberDao().create(
+                                Member(
+                                    name = nameTextView.text.toString(),
+                                    age = if (ageTextView.text.toString() != "") ageTextView.text.toString().toInt() else 0,
+                                    gender = gender
+                                )
+                            )
+                        } else {
+                            db.memberDao().update(
+                                Member(
+                                    id = memberId,
+                                    name = nameTextView.text.toString(),
+                                    age = if (ageTextView.text.toString() != "") ageTextView.text.toString().toInt() else 0,
+                                    gender = gender
+                                )
+                            )
+                        }
+                        finish()
+                    }
+                }
             }
+        }
+
+        if (memberId == 0) {
+            supportActionBar?.setTitle(R.string.menu_add_title)
+        } else {
+            supportActionBar?.setTitle(R.string.menu_edit_title)
+            getMember(memberId)
+        }
+    }
+
+    private fun getMember(id: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val member = db.memberDao().one(id)
+
+            nameTextView.text = member.name
+            ageTextView.text = member.age.toString()
+            genderSpinner.setSelection(member.gender)
         }
     }
 }

@@ -38,7 +38,7 @@ class MemberAdapter(private val members: ArrayList<Member>, private var listener
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.memberNameTextView.text = members[position].name
         holder.memberAgeTextView.text = members[position].age.toString()
-        holder.memberSexTextView.text = getSex(members[position].sex)
+        holder.memberSexTextView.text = getGender(members[position].gender)
         holder.view.setOnClickListener {
             listener.onUpdate(members[position])
         }
@@ -54,7 +54,7 @@ class MemberAdapter(private val members: ArrayList<Member>, private var listener
         members.addAll(newList)
     }
 
-    private fun getSex(sex: Int) : String {
+    private fun getGender(sex: Int) : String {
         when (sex) {
             Genders.SEX_MALE -> {
                 return "MALE"

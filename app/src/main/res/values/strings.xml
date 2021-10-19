@@ -4,9 +4,11 @@
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
 
+    <string name="btn_close">Close</string>
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_delete">Delete</string>
+    <string name="btn_send">Send</string>
 
     <string name="menu_add_btn">Add</string>
     <string name="menu_list_title">List</string>
@@ -16,4 +18,8 @@
     <string name="add_textview_name_title">Name</string>
     <string name="add_textview_age_title">Age</string>
     <string name="add_textview_gender_title">Gender</string>
+
+    <string name="error_title">Error</string>
+    <string name="error_name_empty">Please enter your name</string>
+    <string name="error_age_empty">Please enter your age</string>
 </resources>
