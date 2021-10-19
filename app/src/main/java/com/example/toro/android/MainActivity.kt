@@ -18,14 +18,14 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private val db by lazy { MemberDatabase(this) }
-    lateinit var memberAdapter: MemberAdapter
+    private lateinit var memberAdapter: MemberAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         setupView()
-        setupList()
+        setUpRecyclerView()
     }
 
     override fun onResume() {
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -60,10 +60,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        getSupportActionBar()?.setTitle(R.string.menu_list_title)
+        supportActionBar?.setTitle(R.string.menu_list_title)
     }
 
-    private fun setupList() {
+    private fun setUpRecyclerView() {
 //        arrayListOf(
 //            Member("Wayne", 20, 1),
 //            Member("David", 20, 0),
@@ -72,9 +72,8 @@ class MainActivity : AppCompatActivity() {
         memberAdapter = MemberAdapter(
             arrayListOf(),
             object: MemberAdapter.OnAdapterListener {
-                override fun onClick(member: Member) {
-                }
                 override fun onUpdate(member: Member) {
+                    println("on updated")
                 }
                 override fun onDelete(member: Member) {
                     deleteAlert(member)
@@ -82,8 +81,9 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        val list: RecyclerView = findViewById(R.id.member_list)
-        list.apply {
+        val recyclerView: RecyclerView = findViewById(R.id.member_list)
+//        recyclerView.addItemDecoration(SimpleDividerItemDecoration(this))
+        recyclerView.apply {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = memberAdapter
         }
@@ -92,12 +92,12 @@ class MainActivity : AppCompatActivity() {
     private fun deleteAlert(member: Member){
         val dialog = AlertDialog.Builder(this)
         dialog.apply {
-            setTitle("刪除")
-            setMessage("確定刪除 ${member.name}?")
-            setNegativeButton("取消") { dialogInterface, i ->
+            setTitle(R.string.btn_delete)
+            setMessage("${getString(R.string.btn_delete)} ${member.name}?")
+            setNegativeButton(R.string.btn_cancel) { dialogInterface, _ ->
                 dialogInterface.dismiss()
             }
-            setPositiveButton("確定") { dialogInterface, i ->
+            setPositiveButton(R.string.btn_ok) { dialogInterface, _ ->
                 CoroutineScope(Dispatchers.IO).launch {
                     db.memberDao().delete(member)
                     dialogInterface.dismiss()

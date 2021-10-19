@@ -45,12 +45,31 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:text=""
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/addMemberAgeTitle"/>
+
+    <TextView
+        android:id="@+id/addMemberGenderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:text="@string/add_textview_gender_title"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/addMemberAge"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Spinner
+        android:id="@+id/addMemberGender"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/addMemberGenderTitle" />
 
     <Button
         android:id="@+id/add_btn"
@@ -60,5 +79,5 @@
         android:layout_marginTop="20dp"
         android:background="@color/primary"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/addMemberAge"/>
+        app:layout_constraintTop_toBottomOf="@+id/addMemberGender" />
 </androidx.constraintlayout.widget.ConstraintLayout>

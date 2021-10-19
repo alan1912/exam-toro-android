@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">exam-toro-android</string>
+
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
+
     <string name="menu_add_btn">Add</string>
     <string name="menu_list_title">List</string>
     <string name="menu_add_title">Add</string>

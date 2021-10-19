@@ -6,12 +6,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.toro.android.constant.Sex
+import com.example.toro.android.constant.Genders
 import com.example.toro.android.room.Member
 
-class MemberAdapter(private val members: ArrayList<Member>, var listener: OnAdapterListener) :
+class MemberAdapter(private val members: ArrayList<Member>, private var listener: OnAdapterListener) :
     RecyclerView.Adapter<MemberAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val view = view
         val memberNameTextView: TextView
         val memberAgeTextView: TextView
         val memberSexTextView: TextView
@@ -38,6 +39,9 @@ class MemberAdapter(private val members: ArrayList<Member>, var listener: OnAdap
         holder.memberNameTextView.text = members[position].name
         holder.memberAgeTextView.text = members[position].age.toString()
         holder.memberSexTextView.text = getSex(members[position].sex)
+        holder.view.setOnClickListener {
+            listener.onUpdate(members[position])
+        }
         holder.memberDeleteBtn.setOnClickListener {
             listener.onDelete(members[position])
         }
@@ -52,18 +56,17 @@ class MemberAdapter(private val members: ArrayList<Member>, var listener: OnAdap
 
     private fun getSex(sex: Int) : String {
         when (sex) {
-            Sex.SEX_MALE -> {
+            Genders.SEX_MALE -> {
                 return "MALE"
             }
-            Sex.SEX_FEMALE -> {
-                return "FAMALE"
+            Genders.SEX_FEMALE -> {
+                return "FEMALE"
             }
         }
         return "None"
     }
 
     interface OnAdapterListener {
-        fun onClick(member: Member)
         fun onUpdate(member: Member)
         fun onDelete(member: Member)
     }
