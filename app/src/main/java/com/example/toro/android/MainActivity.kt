@@ -1,6 +1,7 @@
 package com.example.toro.android
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toro.android.add.AddActivity
+import com.example.toro.android.helper.SwipeButton
+import com.example.toro.android.helper.SwipeButtonClickListener
+import com.example.toro.android.helper.SwipeHelper
 import com.example.toro.android.room.Member
 import com.example.toro.android.room.MemberDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -70,17 +74,38 @@ class MainActivity : AppCompatActivity() {
                 override fun onUpdate(member: Member) {
                     update(member)
                 }
-                override fun onDelete(member: Member) {
-                    deleteAlert(member)
-                }
             }
         )
 
         val recyclerView: RecyclerView = findViewById(R.id.member_list)
-//        recyclerView.addItemDecoration(SimpleDividerItemDecoration(this))
         recyclerView.apply {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = memberAdapter
+        }
+
+        // add swipe
+        object: SwipeHelper(this, recyclerView, 200) {
+            override fun instantiateMyButton(
+                viewHolder: RecyclerView.ViewHolder,
+                buffer: MutableList<SwipeButton>
+            ) {
+                buffer.add(
+                    SwipeButton(this@MainActivity,
+                        getString(R.string.btn_delete),
+                        30,
+                        0,
+                        Color.parseColor("#FF3C30"),
+                        object: SwipeButtonClickListener {
+                            override fun onClick(pos: Int) {
+                                val member = memberAdapter.getItem(pos)
+                                if (member != null) {
+                                    deleteAlert(member)
+                                }
+                            }
+                        }
+                    )
+                )
+            }
         }
     }
 

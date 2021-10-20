@@ -100,8 +100,10 @@ class AddActivity : AppCompatActivity() {
 
         if (memberId == 0) {
             supportActionBar?.setTitle(R.string.menu_add_title)
+            sendBtn.text = getString(R.string.menu_add_title)
         } else {
             supportActionBar?.setTitle(R.string.menu_edit_title)
+            sendBtn.text = getString(R.string.menu_edit_title)
             getMember(memberId)
         }
     }

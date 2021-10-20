@@ -16,14 +16,12 @@ class MemberAdapter(private val members: ArrayList<Member>, private var listener
         val memberNameTextView: TextView
         val memberAgeTextView: TextView
         val memberSexTextView: TextView
-        val memberDeleteBtn: Button
 
         init {
             // Define click listener for the ViewHolder's View.
             memberNameTextView = view.findViewById(R.id.member_name)
             memberAgeTextView = view.findViewById(R.id.member_age)
             memberSexTextView = view.findViewById(R.id.member_sex)
-            memberDeleteBtn = view.findViewById(R.id.delete_btn)
         }
     }
 
@@ -42,12 +40,13 @@ class MemberAdapter(private val members: ArrayList<Member>, private var listener
         holder.view.setOnClickListener {
             listener.onUpdate(members[position])
         }
-        holder.memberDeleteBtn.setOnClickListener {
-            listener.onDelete(members[position])
-        }
     }
 
     override fun getItemCount(): Int = members.size
+
+    fun getItem(pos: Int): Member? {
+        return members.getOrNull(pos)
+    }
 
     fun setData(newList: List<Member>) {
         members.clear()
@@ -68,6 +67,5 @@ class MemberAdapter(private val members: ArrayList<Member>, private var listener
 
     interface OnAdapterListener {
         fun onUpdate(member: Member)
-        fun onDelete(member: Member)
     }
 }
